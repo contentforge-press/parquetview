@@ -29,8 +29,9 @@ def nav_html(active):
 
 FOOTER = f"""<footer class="site"><div class="in"><div class="cols">
   <div><h4>ParquetView</h4>Free, privacy-first Parquet tools. Files never leave your browser.<br>© 2026 ParquetView</div>
-  <div><h4>Tools</h4><a href="/">Parquet Viewer</a><br><a href="/parquet-to-csv/">Parquet to CSV</a><br><a href="/parquet-to-json/">Parquet to JSON</a></div>
-  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">On Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-linux/">Linux</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">Parquet vs CSV</a> &middot; <a href="/parquet-vs-json/">JSON</a> &middot; <a href="/parquet-vs-orc/">ORC</a><br><a href="/parquet-viewer-online/">Parquet viewer online</a> &middot; <a href="/parquet-to-jsonl/">Parquet to JSONL</a></div>
+  <div><h4>Tools</h4><a href="/tools/">All tools &amp; guides</a><br><a href="/">Parquet Viewer</a><br><a href="/parquet-to-csv/">Parquet to CSV</a><br><a href="/parquet-to-json/">Parquet to JSON</a><br><a href="/parquet-to-jsonl/">Parquet to JSONL</a></div>
+  <div><h4>View &amp; convert</h4><a href="/parquet-viewer-online/">Viewer online</a> &middot; <a href="/large-parquet-file-viewer/">Large files</a><br><a href="/parquet-to-excel/">Parquet to Excel</a> &middot; <a href="/parquet-file-converter/">File converter</a><br><a href="/open-parquet-mobile/">On mobile</a> &middot; <a href="/parquet-schema-viewer/">Schema viewer</a></div>
+  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-linux/">Linux</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">vs CSV</a> &middot; <a href="/parquet-vs-json/">vs JSON</a> &middot; <a href="/parquet-vs-orc/">vs ORC</a><br><a href="/parquet-vs-avro/">vs Avro</a> &middot; <a href="/parquet-vs-feather/">vs Feather</a></div>
 </div></div></footer>"""
 
 TOOL_MARKUP = """
@@ -1040,6 +1041,61 @@ PAGES["convert-parquet-to-csv/index.html"] = page(
     "/convert-parquet-to-csv/", onlinecsv_body, "/parquet-to-csv/",
     extra_head=ld_json("WebApplication","Convert Parquet to CSV Online","Export Parquet to CSV in the browser, all rows","/convert-parquet-to-csv/")
     + breadcrumb_ld([("Home","/"),("Convert Parquet to CSV","/convert-parquet-to-csv/")])
+)
+
+# 23) All tools hub
+hub_body = """
+<header class="page"><h1>All Parquet Tools &amp; Guides</h1></header>
+<p class="sub">Everything ParquetView does &mdash; all free, all in your browser, files are never uploaded.</p>
+<div class="prose hub">
+
+<h2>View &amp; inspect</h2>
+<div class="linkgrid">
+<a href="/"><b>Parquet Viewer</b><span>Open and browse a .parquet file</span></a>
+<a href="/parquet-viewer-online/"><b>Parquet Viewer Online</b><span>View files in the browser, privately</span></a>
+<a href="/large-parquet-file-viewer/"><b>Large File Viewer</b><span>Open big files without crashing</span></a>
+<a href="/open-parquet-mobile/"><b>Mobile Viewer</b><span>Open on iPhone or Android</span></a>
+<a href="/parquet-schema-viewer/"><b>Schema Viewer</b><span>See columns, types and metadata</span></a>
+</div>
+
+<h2>Convert</h2>
+<div class="linkgrid">
+<a href="/parquet-file-converter/"><b>Parquet File Converter</b><span>CSV, JSON or JSON Lines in one place</span></a>
+<a href="/parquet-to-csv/"><b>Parquet to CSV</b><span>For Excel and spreadsheets</span></a>
+<a href="/parquet-to-json/"><b>Parquet to JSON</b><span>A standard JSON array</span></a>
+<a href="/parquet-to-jsonl/"><b>Parquet to JSONL</b><span>Newline-delimited JSON (NDJSON)</span></a>
+<a href="/parquet-to-excel/"><b>Parquet to Excel</b><span>Open .parquet in Excel</span></a>
+<a href="/convert-parquet-to-csv/"><b>Convert Parquet to CSV Online</b><span>Private, all rows</span></a>
+</div>
+
+<h2>Open Parquet by platform</h2>
+<div class="linkgrid">
+<a href="/how-to-open-parquet/"><b>How to Open Parquet</b><span>The general guide</span></a>
+<a href="/open-parquet-windows/"><b>On Windows</b><span>Every option compared</span></a>
+<a href="/open-parquet-mac/"><b>On Mac</b><span>Terminal, Python or browser</span></a>
+<a href="/open-parquet-linux/"><b>On Linux</b><span>CLI and browser options</span></a>
+<a href="/open-parquet-excel/"><b>In Excel</b><span>Power Query and CSV paths</span></a>
+</div>
+
+<h2>Understand the format</h2>
+<div class="linkgrid">
+<a href="/what-is-parquet/"><b>What is a Parquet file?</b><span>Beginner-friendly explainer</span></a>
+<a href="/parquet-vs-csv/"><b>Parquet vs CSV</b><span>Size, speed and use cases</span></a>
+<a href="/parquet-vs-json/"><b>Parquet vs JSON</b><span>When each wins</span></a>
+<a href="/parquet-vs-orc/"><b>Parquet vs ORC</b><span>Columnar formats compared</span></a>
+<a href="/parquet-vs-avro/"><b>Parquet vs Avro</b><span>Columnar vs row-based</span></a>
+<a href="/parquet-vs-feather/"><b>Parquet vs Feather</b><span>Storage vs in-memory speed</span></a>
+</div>
+
+<div class="cta"><h3>Start here</h3>
+<div class="row"><a class="btn" href="/">Open the Parquet viewer</a></div></div>
+</div>
+"""
+PAGES["tools/index.html"] = page(
+    "All Free Parquet Tools, Viewers & Guides — ParquetView",
+    "Browse every free ParquetView tool and guide: viewers for online/large/mobile files, converters for CSV/JSON/JSONL/Excel, and platform tutorials for Windows, Mac, Linux and Excel.",
+    "/tools/", hub_body, None,
+    extra_head=breadcrumb_ld([("Home","/"),("All Tools","/tools/")])
 )
 
 # ---------------- Write all ----------------
