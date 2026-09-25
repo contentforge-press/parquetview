@@ -893,6 +893,155 @@ PAGES["parquet-schema-viewer/index.html"] = page(
     + breadcrumb_ld([("Home","/"),("Parquet Schema Viewer","/parquet-schema-viewer/")])
 )
 
+# 19) Parquet vs Avro
+avro_body = """
+<header class="page"><h1>Parquet vs Avro: row-based or columnar?</h1></header>
+<p class="sub">Both are popular Apache formats &mdash; the difference is how they lay out and read data.</p>
+<div class="prose">
+<p><b>Avro</b> is a <b>row-based</b> serialization format; <b>Parquet</b> is <b>columnar</b>. The choice depends on whether you are writing/transporting whole records or querying a few columns over many rows.</p>
+
+<table class="cmp">
+<tr><th></th><th>Parquet</th><th>Avro</th></tr>
+<tr><td>Layout</td><td>Column chunks</td><td>Rows, one after another</td></tr>
+<tr><td>Schema</td><td>Embedded in footer</td><td>Embedded with data (often paired with a schema registry)</td></tr>
+<tr><td>Best at</td><td>Analytical scans of a few columns</td><td>Streaming, messaging, whole-record serialization</td></tr>
+<tr><td>Compression</td><td>Very high on columnar data</td><td>Good, but usually less compact for analytics</td></tr>
+<tr><td>Typical use</td><td>Data lakes, Spark/Trino tables</td><td>Kafka topics, event transport, API payloads</td></tr>
+<tr><td>Column projection</td><td>Reads only requested columns</td><td>Must scan full rows</td></tr>
+</table>
+
+<h2>Rule of thumb</h2>
+<ul>
+<li>Store <b>Parquet</b> for data that will be queried and analyzed, especially at scale.</li>
+<li>Use <b>Avro</b> for events moving through Kafka or services that read/write complete records and need strong schema evolution.</li>
+<li>A common pattern is <b>Avro in the stream, Parquet in the lake</b>: ingest as Avro, land as Parquet.</li>
+</ul>
+
+<h2>Opening either format</h2>
+<p>Both are binary. You can open a Parquet file in the browser with the <a href="/">ParquetView viewer</a>, inspect its schema and export to CSV or JSON, with no upload.</p>
+
+<div class="cta"><h3>Open a Parquet file</h3>
+<div class="row"><a class="btn" href="/">Open the viewer</a></div></div>
+</div>
+""" + related_block([
+    ("/parquet-vs-csv/", "Parquet vs CSV", "Other comparison"),
+    ("/parquet-vs-orc/", "Parquet vs ORC", "Other comparison"),
+    ("/what-is-parquet/", "What is Parquet?", "Understand the format"),
+])
+PAGES["parquet-vs-avro/index.html"] = page(
+    "Parquet vs Avro: When to Use Each Format (2026)",
+    "Parquet vs Avro compared: Parquet is columnar for analytics, Avro is row-based for streaming and event transport. A common pattern is Avro in Kafka, Parquet in the lake.",
+    "/parquet-vs-avro/", avro_body, None,
+    extra_head=article_ld("Parquet vs Avro","Comparing the columnar Parquet and row-based Avro formats","/parquet-vs-avro/","Parquet vs Avro: which should you use?")
+    + breadcrumb_ld([("Home","/"),("Guides","/what-is-parquet/"),("Parquet vs Avro","/parquet-vs-avro/")])
+)
+
+# 20) Parquet vs Feather / Arrow IPC
+feather_body = """
+<header class="page"><h1>Parquet vs Feather (Arrow IPC)</h1></header>
+<p class="sub">Both come from the Apache Arrow world, but one is built for archiving and the other for in-memory speed.</p>
+<div class="prose">
+<p><b>Feather</b> (now the <b>Arrow IPC</b> format) stores Arrow data essentially as it sits in memory, optimized for fast interchange between Python, R and Arrow processes. <b>Parquet</b> is a compressed, columnar on-disk format built for long-term storage and analytics.</p>
+
+<table class="cmp">
+<tr><th></th><th>Parquet</th><th>Feather / Arrow IPC</th></tr>
+<tr><td>Purpose</td><td>Storage and analytics</td><td>Fast in-memory interchange</td></tr>
+<tr><td>File size</td><td>Smaller (strong compression)</td><td>Larger (light/no compression)</td></tr>
+<tr><td>Read/write speed</td><td>Slightly more CPU to decode</td><td>Very fast, near zero-copy</td></tr>
+<tr><td>Durability</td><td>Long-term archive standard</td><td>Temporary/interprocess exchange</td></tr>
+<tr><td>Compatibility</td><td>Nearly every data engine</td><td>Arrow-native tools</td></tr>
+</table>
+
+<h2>Rule of thumb</h2>
+<ul>
+<li>Use <b>Feather</b> for short-lived data you shuffle between pandas, R and Arrow jobs on the same machine, when speed matters more than size.</li>
+<li>Use <b>Parquet</b> to save datasets to disk, share them, or query them later &mdash; especially large or archival data where compression matters.</li>
+</ul>
+
+<h2>Opening Parquet files</h2>
+<p>If you have a <code>.parquet</code> to inspect, open it in the browser with <a href="/">ParquetView</a>, view the schema and export to CSV or JSON &mdash; no install, no upload.</p>
+
+<div class="cta"><h3>Inspect a Parquet file</h3>
+<div class="row"><a class="btn" href="/">Open the viewer</a></div></div>
+</div>
+""" + related_block([
+    ("/parquet-vs-csv/", "Parquet vs CSV", "Other comparison"),
+    ("/parquet-vs-avro/", "Parquet vs Avro", "Other comparison"),
+    ("/what-is-parquet/", "What is Parquet?", "Understand the format"),
+])
+PAGES["parquet-vs-feather/index.html"] = page(
+    "Parquet vs Feather (Arrow IPC): Storage vs Speed (2026)",
+    "Parquet vs Feather compared: Parquet is compressed for storage and analytics; Feather/Arrow IPC is optimized for fast in-memory interchange between Python, R and Arrow.",
+    "/parquet-vs-feather/", feather_body, None,
+    extra_head=article_ld("Parquet vs Feather","Comparing Parquet and Feather/Arrow IPC","/parquet-vs-feather/","Parquet vs Feather: which should you use?")
+    + breadcrumb_ld([("Home","/"),("Guides","/what-is-parquet/"),("Parquet vs Feather","/parquet-vs-feather/")])
+)
+
+# 21) Free online Parquet file converter
+converter_body = TOOL_MARKUP.format(
+    h1='Free Online Parquet File Converter',
+    sub='Convert <code>.parquet</code> to CSV, JSON or JSON Lines in your browser. No upload, no signup, free.',
+    drop_strong='Drop a .parquet file to convert it',
+    drop_span='or tap to choose a file &mdash; then pick an export format',
+) + """
+<div class="prose">
+<h2>One file, three formats</h2>
+<p>Drop a Parquet file, preview it, then export to whichever format you need:</p>
+<ul>
+<li><b>CSV</b> &mdash; for Excel, Google Sheets and databases. The whole file is read before export.</li>
+<li><b>JSON</b> &mdash; a standard array for APIs and applications.</li>
+<li><b>JSON Lines (NDJSON)</b> &mdash; one object per line for logs, BigQuery and bulk import.</li>
+</ul>
+<h2>Private by design</h2>
+<p>Unlike server-side converters, this one runs the Parquet engine entirely in your browser tab. Your file is read from your disk in ranges and is never transmitted, which also means no file-size upload limit and no waiting on a queue.</p>
+<blockquote>Snappy, Gzip, Zstd and LZ4 compression are supported. int64 values are preserved even when they exceed JavaScript's safe integer range.</blockquote>
+<p>If you only need to inspect a file, use the <a href="/">main viewer</a>; if you specifically need a spreadsheet, the dedicated <a href="/parquet-to-csv/">Parquet to CSV</a> page walks through it.</p>
+</div>
+""" + related_block([
+    ("/parquet-to-csv/", "Parquet to CSV", "CSV"),
+    ("/parquet-to-json/", "Parquet to JSON", "JSON"),
+    ("/parquet-to-jsonl/", "Parquet to JSONL", "JSON Lines"),
+])
+PAGES["parquet-file-converter/index.html"] = page(
+    "Free Online Parquet File Converter — CSV, JSON, JSONL (No Upload)",
+    "Convert Parquet to CSV, JSON or JSONL online for free. Files are converted in your browser and never uploaded — no signup, no queue, supports Snappy/Gzip/Zstd/LZ4.",
+    "/parquet-file-converter/", converter_body, "/",
+    extra_head=ld_json("WebApplication","Online Parquet File Converter","Convert Parquet to CSV, JSON or JSONL locally","/parquet-file-converter/")
+    + breadcrumb_ld([("Home","/"),("Parquet File Converter","/parquet-file-converter/")])
+)
+
+# 22) Convert Parquet to CSV online
+onlinecsv_body = TOOL_MARKUP.format(
+    h1='Convert Parquet to CSV Online',
+    sub='Turn <code>.parquet</code> into a CSV download in your browser. Private, free, no signup and no upload.',
+    drop_strong='Drop a .parquet file to export CSV',
+    drop_span='or tap to choose a file &mdash; then hit “Export CSV”',
+) + """
+<div class="prose">
+<h2>Fast, private Parquet &rarr; CSV</h2>
+<ol>
+<li>Drop your <code>.parquet</code> file above.</li>
+<li>Preview the columns and confirm types.</li>
+<li>Click <b>“Export CSV”</b>. All rows are read first, so the download is the complete file.</li>
+</ol>
+<p>The CSV uses a UTF-8 BOM and clean date/timestamp formatting, so it opens correctly in Excel and other tools.</p>
+<h2>Why in the browser?</h2>
+<p>The conversion happens on your device with no server round-trip, so sensitive data stays local, there is no upload size limit, and the download starts as soon as the file is parsed.</p>
+<blockquote>Need JSON instead? Use the <a href="/parquet-to-json/">Parquet to JSON</a> tool, or the general <a href="/parquet-file-converter/">Parquet file converter</a>.</blockquote>
+</div>
+""" + related_block([
+    ("/parquet-to-csv/", "Parquet to CSV", "Main CSV tool"),
+    ("/parquet-file-converter/", "File converter", "More formats"),
+    ("/parquet-to-excel/", "Parquet to Excel", "For spreadsheets"),
+])
+PAGES["convert-parquet-to-csv/index.html"] = page(
+    "Convert Parquet to CSV Online — Free, Private, All Rows",
+    "Convert Parquet to CSV online for free. All rows are exported with clean dates and a UTF-8 BOM; files are parsed in your browser and never uploaded.",
+    "/convert-parquet-to-csv/", onlinecsv_body, "/parquet-to-csv/",
+    extra_head=ld_json("WebApplication","Convert Parquet to CSV Online","Export Parquet to CSV in the browser, all rows","/convert-parquet-to-csv/")
+    + breadcrumb_ld([("Home","/"),("Convert Parquet to CSV","/convert-parquet-to-csv/")])
+)
+
 # ---------------- Write all ----------------
 for rel, content in PAGES.items():
     write_file(rel, content)
