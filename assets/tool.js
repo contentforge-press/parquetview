@@ -89,6 +89,13 @@ function typeName(node){
 async function loadMoreRows(first){
   const want = Math.min(state.loaded + (first?2000:10000), state.total, MAX_LOAD);
   if(want<=state.loaded) return;
+  await readChunk(want);
+  $('loadmore').style.display = (state.loaded < Math.min(state.total,MAX_LOAD)) ? '' : 'none';
+  updateSizeCard();
+  render();
+}
+
+async function readChunk(want){
   const lib = await ensureCompressors();
   const opts = { file:state.fileObj, rowStart:state.loaded, rowEnd:want };
   if(lib && lib.compressors) opts.compressors = lib.compressors;
@@ -96,7 +103,23 @@ async function loadMoreRows(first){
   state.rows.push(...chunk);
   state.loaded = want;
   state.total = Math.max(state.total, want);
-  $('loadmore').style.display = (state.loaded < Math.min(state.total,MAX_LOAD)) ? '' : 'none';
+}
+
+// Read the rest of the file (up to MAX_LOAD) so an export contains every row.
+async function ensureAllRows(){
+  const target = Math.min(state.total, MAX_LOAD);
+  if(state.loaded >= target) return;
+  const lib = await ensureCompressors();
+  while(state.loaded < target){
+    const want = Math.min(state.loaded + 50000, target);
+    const opts = { file:state.fileObj, rowStart:state.loaded, rowEnd:want };
+    if(lib && lib.compressors) opts.compressors = lib.compressors;
+    const chunk = await hp.parquetReadObjects(opts);
+    state.rows.push(...chunk);
+    state.loaded = want;
+  }
+  state.total = Math.max(state.total, state.loaded);
+  $('loadmore').style.display='none';
   updateSizeCard();
   render();
 }
@@ -252,19 +275,42 @@ function baseName(){
   const n=(state.fileHandle?.name||'data').replace(/\.(parquet|pq|parq)$/i,'');
   return n;
 }
-function exportCSV(){
-  const rows=filteredRows(), cols=state.visibleCols;
-  const lines=[cols.map(c=>csvCell(c,c)).join(',')];
-  for(const r of rows) lines.push(cols.map(c=>csvCell(r[c],c)).join(','));
-  const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
-  download(baseName()+'.csv',blob);
-  toast(`Exported ${rows.length.toLocaleString()} rows to CSV`);
+function setBusy(btn,busy,label){
+  btn.disabled=busy;
+  if(label) btn.textContent=label;
 }
-function exportJSON(){
-  const rows=filteredRows();
-  const blob=new Blob([JSON.stringify(rows,null,2)],{type:'application/json'});
-  download(baseName()+'.json',blob);
-  toast(`Exported ${rows.length.toLocaleString()} rows to JSON`);
+async function exportCSV(){
+  const btn=$('csvbtn'); if(btn.disabled) return;
+  setBusy(btn,true,'Reading full file…');
+  try{
+    await ensureAllRows();
+    const rows=filteredRows(), cols=state.visibleCols;
+    const lines=[cols.map(c=>csvCell(c,c)).join(',')];
+    for(const r of rows) lines.push(cols.map(c=>csvCell(r[c],c)).join(','));
+    const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    download(baseName()+'.csv',blob);
+    toast(`Exported ${rows.length.toLocaleString()} rows to CSV${state.total>MAX_LOAD?` (first ${MAX_LOAD.toLocaleString()})`:''}`);
+  }catch(e){ toast('Export failed: '+(e.message||e),true); }
+  setBusy(btn,false,'⬇️ Export CSV');
+}
+async function exportJSON(){
+  const btn=$('jsonbtn'); if(btn.disabled) return;
+  const ndjson = location.pathname.includes('/parquet-to-jsonl');
+  setBusy(btn,true,'Reading full file…');
+  try{
+    await ensureAllRows();
+    const rows=filteredRows();
+    let content, ext, label;
+    if(ndjson){
+      content=rows.map(r=>JSON.stringify(r)).join('\n'); ext='jsonl'; label='JSON Lines';
+    } else {
+      content=JSON.stringify(rows,null,2); ext='json'; label='JSON';
+    }
+    const blob=new Blob([content],{type:'application/x-ndjson'});
+    download(baseName()+'.'+ext,blob);
+    toast(`Exported ${rows.length.toLocaleString()} rows to ${label}${state.total>MAX_LOAD?` (first ${MAX_LOAD.toLocaleString()})`:''}`);
+  }catch(e){ toast('Export failed: '+(e.message||e),true); }
+  setBusy(btn,false,ndjson?'⬇️ Export JSONL':'⬇️ JSON');
 }
 
 function showWorkspaceLoading(loading,resetOnly=false){
@@ -294,6 +340,7 @@ $('loadmore').onclick=async function(){
 };
 $('csvbtn').onclick=exportCSV;
 $('jsonbtn').onclick=exportJSON;
+if(location.pathname.includes('/parquet-to-jsonl')) $('jsonbtn').textContent='⬇️ Export JSONL';
 $('schemahd').onclick=()=>$('schemawrap').classList.toggle('open');
 
 ['dragover','dragenter'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();$('dropzone').classList.add('over');}));
