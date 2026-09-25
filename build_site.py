@@ -1195,6 +1195,52 @@ FAQS = {
    ("When should I use Parquet?",
     "Use it for datasets that will be queried or analyzed, especially large data processed by Spark, Trino, DuckDB, pandas and cloud data services."),
  ],
+ "/parquet-to-jsonl/": [
+   ("What is the difference between JSON and JSON Lines?",
+    "A JSON file is one array of objects; JSON Lines (JSONL/NDJSON) stores one object per line, so each record can be read independently. It is common for logs and streaming data."),
+   ("Does the export contain every row?",
+    "Yes. The whole Parquet file is read before writing the .jsonl file, so all rows are included."),
+   ("How are int64 columns handled?",
+    "64-bit integers within JavaScript's safe range are written as numbers; values outside that range are written as strings to preserve them exactly."),
+ ],
+ "/parquet-to-excel/": [
+   ("Can I get a real .xlsx file?",
+    "The tool exports a CSV that opens cleanly in Excel; you can then save it as .xlsx from Excel. This avoids a server and keeps the conversion local."),
+   ("Does the export include the whole file?",
+    "Yes. All rows are read before the CSV is generated, not just the first page."),
+   ("What if I have more than Excel's row limit?",
+    "Excel supports 1,048,576 rows. For larger Parquet files, filter or select the subset you need before exporting."),
+ ],
+ "/open-parquet-linux/": [
+   ("Can I open Parquet on Linux without installing packages?",
+    "Yes. Open ParquetView in Firefox or Chrome and choose the file; it is parsed in the browser and never uploaded."),
+   ("What command-line options exist?",
+    "You can use the DuckDB CLI, or Python with pyarrow/pandas, depending on what is installed on the machine."),
+ ],
+ "/open-parquet-mobile/": [
+   ("Does this work on iPhone and Android?",
+    "Yes. Use Safari on iOS or Chrome on Android, then choose the file from Files, iCloud Drive or Google Drive."),
+   ("Do I need to install an app?",
+    "No app or account is needed; the Parquet engine runs in your mobile browser and the file stays on the device."),
+ ],
+ "/parquet-schema-viewer/": [
+   ("What schema information is shown?",
+    "You can see each column's name and logical type, plus row count, row groups, file size and any key/value metadata from the writer."),
+   ("Why does the schema appear before the rows?",
+    "Parquet stores its schema in the file footer, which can be read without loading the data. That is why metadata appears almost instantly."),
+ ],
+ "/parquet-file-converter/": [
+   ("Which output formats are supported?",
+    "CSV, JSON and JSON Lines (NDJSON). Drop the file, preview it, then choose the format you need."),
+   ("Is my file uploaded for conversion?",
+    "No. All conversions run in your browser and the file remains on your device."),
+ ],
+ "/convert-parquet-to-csv/": [
+   ("Does this export all rows?",
+    "Yes. The full Parquet file is read before the CSV is produced, so the download is complete."),
+   ("How is this different from the main CSV tool?",
+    "It provides the same private, in-browser Parquet to CSV conversion with a focused page for the 'convert Parquet to CSV online' workflow."),
+ ],
 }
 
 def inject_faqs(pages):
@@ -1244,5 +1290,37 @@ for rel in PAGES:
     p = "/" if rel == "index.html" else "/" + rel.replace("index.html", "")
     urls += f"  <url><loc>{SITE_URL}{p}</loc><changefreq>weekly</changefreq></url>\n"
 write_file("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n")
+
+# 404 page (noindex; good UX for broken links)
+notfound = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Page not found — ParquetView</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#129702;</text></svg>">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+{nav_html(None)}
+<div class="wrap">
+  <header class="page"><h1>404 — Page not found</h1></header>
+  <p class="sub">That link may be broken or the page may have moved. Nothing to worry about.</p>
+  <div class="prose">
+  <p>Here are some useful places instead:</p>
+  <ul>
+    <li><a href="/">Open the Parquet viewer</a></li>
+    <li><a href="/tools/">Browse all tools and guides</a></li>
+    <li><a href="/parquet-to-csv/">Convert Parquet to CSV</a></li>
+    <li><a href="/what-is-parquet/">What is a Parquet file?</a></li>
+  </ul>
+  </div>
+</div>
+{FOOTER}
+</body>
+</html>
+"""
+write_file("404.html", notfound)
 
 print("Built", len(PAGES), "pages into", SITE)
