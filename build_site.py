@@ -1098,7 +1098,133 @@ PAGES["tools/index.html"] = page(
     extra_head=breadcrumb_ld([("Home","/"),("All Tools","/tools/")])
 )
 
+# ---------- FAQ injection (FAQ sections + FAQPage JSON-LD) ----------
+def faq_html(qa):
+    rows = "".join(
+        f'<details class="faq"><summary>{H.escape(q)}</summary><div class="faq-a"><p>{a}</p></div></details>'
+        for q, a in qa)
+    return f'<section class="faqwrap"><h2>Frequently asked questions</h2>{rows}</section>'
+
+def faq_ld(qa, url):
+    items = []
+    for i, (q, a) in enumerate(qa):
+        # strip simple html tags for the plain-text answer
+        import re as _re
+        text = _re.sub(r"<[^>]+>", "", a)
+        items.append({
+            "@type": "Question",
+            "name": q,
+            "position": i + 1,
+            "acceptedAnswer": {"@type": "Answer", "text": text},
+        })
+    return json.dumps({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": items,
+        "url": SITE_URL + url,
+    }, ensure_ascii=False)
+
+FAQS = {
+ "/": [
+   ("Are Parquet files uploaded to a server?",
+    "No. ParquetView runs a Parquet engine (hyparquet) directly in your browser tab. The file is read from your disk in ranges and is never sent over the network."),
+   ("Do I need to install Python or any software?",
+    "No installation or account is required. Open the page, choose a file, and its rows are rendered in the browser on Windows, Mac, Linux and mobile."),
+   ("Why don't all rows load immediately?",
+    "Only the first rows are read initially so even very large files open quickly. Use “Load more rows” to page further, or export to read the whole file."),
+   ("Which compression codecs are supported?",
+    "Snappy, Gzip, Zstd and LZ4 are supported through a WebAssembly compressors build."),
+ ],
+ "/parquet-to-csv/": [
+   ("Does the CSV export include all rows?",
+    "Yes. When you click Export CSV the whole Parquet file is read first (up to the in-browser limit), so the download contains every row, not just the visible page."),
+   ("Will my file be uploaded to convert it?",
+    "No. Conversion happens entirely in your browser; the file never leaves your device."),
+   ("Will dates and numbers stay formatted?",
+    "Date columns are written as YYYY-MM-DD and timestamps as YYYY-MM-DD HH:MM:SS. The CSV includes a UTF-8 BOM so it opens correctly in Excel."),
+   ("What is the Excel row limit?",
+    "Excel supports up to 1,048,576 rows. Filter your data first if the Parquet file is larger than a single sheet can hold."),
+ ],
+ "/parquet-to-json/": [
+   ("What JSON structure is produced?",
+    "A standard JSON array of objects, one object per row, with keys taken from the Parquet column names."),
+   ("How are int64 values handled?",
+    "JavaScript cannot represent every 64-bit integer. Values within the safe integer range are exported as numbers; larger values are exported as strings so no value is lost."),
+   ("Is the file uploaded during conversion?",
+    "No. The Parquet engine runs in your browser and the file is processed locally."),
+ ],
+ "/parquet-viewer-online/": [
+   ("How is this different from other online viewers?",
+    "Most online viewers upload your file to a server. ParquetView parses the file inside your browser tab, so your data never leaves your device."),
+   ("Do I need to sign up?",
+    "No account, plugin or installation is needed. Choose a file and view it immediately."),
+   ("Does it work on a phone?",
+    "Yes. The viewer is responsive and works in Safari on iPhone and Chrome on Android."),
+ ],
+ "/large-parquet-file-viewer/": [
+   ("Can I open a multi-GB Parquet file?",
+    "Rows are loaded on demand rather than all at once, so large files open without exhausting memory. Schema and metadata come from the small Parquet footer."),
+   ("How do I see rows beyond the first page?",
+    "Use “Load more rows” to read further, or use export, which reads the rest of the file automatically."),
+   ("Is there an upload size limit?",
+    "Because the file is read locally rather than uploaded, there is no server upload limit. The practical limit is your device's available memory."),
+ ],
+ "/open-parquet-windows/": [
+   ("Can I open a Parquet file without installing anything on Windows?",
+    "Yes. Open ParquetView in your browser and choose the file; it is parsed locally with no installation."),
+   ("Does Excel open Parquet directly?",
+    "Excel's Parquet support is limited and Windows-only. The reliable route is to convert to CSV, then open that in Excel."),
+ ],
+ "/open-parquet-mac/": [
+   ("How do I open a Parquet file on macOS?",
+    "You can open it in your browser with ParquetView (nothing to install), or use Python with pyarrow/pandas, or the DuckDB CLI."),
+   ("Why doesn't double-clicking the file work?",
+    "Parquet is a binary, columnar format with no default macOS handler, so it does not open in Preview or TextEdit."),
+ ],
+ "/open-parquet-excel/": [
+   ("Can Excel read Parquet natively?",
+    "Recent Excel versions have limited Power Query Parquet support on Windows. A cross-platform and more reliable method is to export the Parquet file to CSV and open that."),
+   ("Will the CSV keep my data types?",
+    "CSV is text, but ParquetView writes clean dates/timestamps and a UTF-8 BOM so values display correctly in Excel."),
+ ],
+ "/what-is-parquet/": [
+   ("What is a Parquet file?",
+    "Apache Parquet is an open, compressed, columnar storage format designed for efficient analytics. It stores data by column rather than by row."),
+   ("Why is Parquet smaller than CSV?",
+    "Because columns of the same type compress very well, and values are stored using compact binary encodings rather than text."),
+   ("When should I use Parquet?",
+    "Use it for datasets that will be queried or analyzed, especially large data processed by Spark, Trino, DuckDB, pandas and cloud data services."),
+ ],
+}
+
+def inject_faqs(pages):
+    for rel, content in list(pages.items()):
+        # canonical path e.g. "parquet-to-csv/index.html" -> "/parquet-to-csv/"
+        parts = rel.split("/")
+        if len(parts) >= 2 and parts[0] and parts[1] == "index.html":
+            url = "/" + parts[0] + "/"
+        else:
+            url = "/"
+        qa = FAQS.get(url)
+        if not qa:
+            continue
+        section = faq_html(qa)
+        ld = faq_ld(qa, url)
+        # Insert FAQ section before the related links or the CTA.
+        if 'class="related"' in content:
+            content = content.replace('<div class="related">', section + '\n<div class="related">', 1)
+        elif '<div class="cta">' in content:
+            content = content.replace('<div class="cta">', section + '\n<div class="cta">', 1)
+        else:
+            content = content.replace('<div class="wrap">', '<div class="wrap">', 1)
+        # add FAQ JSON-LD right before </head>
+        content = content.replace("</head>",
+            f'<script type="application/ld+json">{ld}</script>\n</head>', 1)
+        pages[rel] = content
+    return pages
+
 # ---------------- Write all ----------------
+inject_faqs(PAGES)
 for rel, content in PAGES.items():
     write_file(rel, content)
 
