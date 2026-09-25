@@ -257,15 +257,24 @@ function render(){
   if(state.loaded<Math.min(state.total,MAX_LOAD)) $('loadmore').style.display='';
 }
 
-function csvCell(v,name){
+// JSON cannot serialize BigInt (int64). Keep exact value: Number when safe, else String.
+const bigReplacer=(k,v)=> (typeof v==='bigint')
+  ? (v>=BigInt(Number.MIN_SAFE_INTEGER) && v<=BigInt(Number.MAX_SAFE_INTEGER) ? Number(v) : v.toString())
+  : v;
+function toJSON(rows, pretty){
+  return JSON.stringify(rows, bigReplacer, pretty?2:0);
+}
+function csvValue(v,name){
   if(v===null||v===undefined) return '';
+  if(typeof v==='bigint') v = (v>=BigInt(Number.MIN_SAFE_INTEGER)&&v<=BigInt(Number.MAX_SAFE_INTEGER)) ? Number(v) : v.toString();
   if(v instanceof Date){
     v = state.colKind[name]==='date' ? fmtDate(v) : fmtDateTime(v);
-  } else if(typeof v==='object') v=JSON.stringify(v);
+  } else if(typeof v==='object') v=JSON.stringify(v,bigReplacer);
   v=String(v);
   if(/[",\n\r]/.test(v)) v='"'+v.replace(/"/g,'""')+'"';
   return v;
 }
+function csvCell(v,name){ return csvValue(v,name); }
 function download(name,blob){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a);
@@ -302,9 +311,9 @@ async function exportJSON(){
     const rows=filteredRows();
     let content, ext, label;
     if(ndjson){
-      content=rows.map(r=>JSON.stringify(r)).join('\n'); ext='jsonl'; label='JSON Lines';
+      content=rows.map(r=>JSON.stringify(r,bigReplacer)).join('\n'); ext='jsonl'; label='JSON Lines';
     } else {
-      content=JSON.stringify(rows,null,2); ext='json'; label='JSON';
+      content=toJSON(rows,true); ext='json'; label='JSON';
     }
     const blob=new Blob([content],{type:'application/x-ndjson'});
     download(baseName()+'.'+ext,blob);
