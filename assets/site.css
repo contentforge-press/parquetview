@@ -131,3 +131,11 @@ footer.site h4{color:var(--txt);font-size:13px;margin:0 0 8px}
   table.data th,table.data td{padding:8px 10px;max-width:220px}
   .drop{padding:26px 14px}
 }
+
+/* hub link grid */
+.hub h2{margin-top:30px}
+.linkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:12px 0 6px}
+.linkgrid a{display:flex;flex-direction:column;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--txt)}
+.linkgrid a:hover{border-color:var(--acc);text-decoration:none;transform:translateY(-1px)}
+.linkgrid a b{font-size:14.5px}
+.linkgrid a span{color:var(--mut);font-size:12.5px}
