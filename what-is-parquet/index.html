@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What is a Parquet File? A Simple Explanation (2026)</title>
+<meta name="description" content="What is Parquet? A simple guide to the columnar file format \u2014 how it compares to CSV, why data and AI teams use it, and how to open .parquet files.">
+<link rel="canonical" href="https://ggyg5gxksw.page.coze.site/what-is-parquet/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#129702;</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What is a Parquet File? A Simple Explanation (2026)">
+<meta property="og:description" content="What is Parquet? A simple guide to the columnar file format \u2014 how it compares to CSV, why data and AI teams use it, and how to open .parquet files.">
+<meta property="og:url" content="https://ggyg5gxksw.page.coze.site/what-is-parquet/">
+<meta property="og:image" content="https://ggyg5gxksw.page.coze.site/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What is a Parquet File? A Simple Explanation (2026)">
+<meta name="twitter:description" content="What is Parquet? A simple guide to the columnar file format \u2014 how it compares to CSV, why data and AI teams use it, and how to open .parquet files.">
+<meta name="twitter:image" content="https://ggyg5gxksw.page.coze.site/assets/og.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "What is a Parquet file?", "description": "A simple guide to the columnar Parquet file format", "url": "https://ggyg5gxksw.page.coze.site/what-is-parquet/", "author": {"@type": "Organization", "name": "ParquetView"}, "publisher": {"@type": "Organization", "name": "ParquetView"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ggyg5gxksw.page.coze.site/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://ggyg5gxksw.page.coze.site/what-is-parquet/"}, {"@type": "ListItem", "position": 3, "name": "What is Parquet", "item": "https://ggyg5gxksw.page.coze.site/what-is-parquet/"}]}</script>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <a class="brand" href="/"><span>🪶</span> ParquetView</a>
+  <div class="navlinks"><a href="/">Viewer</a><a href="/parquet-to-csv/">Parquet to CSV</a><a href="/parquet-to-json/">Parquet to JSON</a><a href="/how-to-open-parquet/">How to open</a><a href="/what-is-parquet/" class="active">What is Parquet?</a></div>
+</div></nav>
+<div class="wrap">
+
+<header class="page"><h1>What is a Parquet file?</h1></header>
+<p class="sub">A plain-English guide to the columnar data format used everywhere in data and AI.</p>
+<div class="prose">
+<p><b>Apache Parquet</b> is an open, column-oriented file format designed for storing and processing large tables efficiently. If CSV is a simple grid of rows and columns you can open anywhere, Parquet is a compressed, typed, analytics-optimized version of the same idea.</p>
+
+<h2>Row-oriented vs column-oriented storage</h2>
+<p>A CSV (or a typical database table) stores data <i>row by row</i>. Parquet stores it <i>column by column</i>. This matters for analytics, where a query like “the average score across all records” only needs one column. Reading one compact column block is far faster than scanning every row.</p>
+
+<table class="cmp">
+<tr><th></th><th>CSV</th><th>Parquet</th></tr>
+<tr><td>Layout</td><td>Row-based</td><td>Column-based</td></tr>
+<tr><td>Size</td><td>Larger, plain text</td><td>Smaller (compression + encoding)</td></tr>
+<tr><td>Types</td><td>None built in</td><td>Strong schema &amp; types</td></tr>
+<tr><td>Best for</td><td>Sharing, spreadsheets</td><td>Analytics, data lakes, AI</td></tr>
+<tr><td>Opens in Excel?</td><td>Yes</td><td>No &mdash; use a viewer</td></tr>
+</table>
+
+<h2>Why teams choose Parquet</h2>
+<ul>
+<li><b>Smaller files:</b> columnar encoding plus compression (Snappy, Zstd, Gzip) shrink storage dramatically.</li>
+<li><b>Faster queries:</b> engines read only the columns they need.</li>
+<li><b>Schema built in:</b> types, nullability and nested structures travel with the data.</li>
+<li><b>Ecosystem:</b> Spark, DuckDB, pandas, Polars, Snowflake, BigQuery and most AI/data pipelines speak Parquet natively.</li>
+</ul>
+
+<h2>The catch</h2>
+<p>Parquet is <b>binary</b>, so you cannot just double-click it in Excel or a text editor. That is exactly why tools like the <a href="/">ParquetView viewer</a> exist &mdash; open and inspect the file right in your browser without installing anything.</p>
+
+<div class="cta">
+<h3>Open your first Parquet file</h3>
+<p>Free, private, no signup. It opens directly in your browser.</p>
+<div class="row"><a class="btn" href="/">Open the viewer</a><a class="btn ghost" href="/how-to-open-parquet/">See how to open Parquet</a></div>
+</div>
+</div>
+<div class="related"><a href="/how-to-open-parquet/">How to open Parquet<span>4 ways, step by step</span></a><a href="/parquet-to-csv/">Parquet to CSV<span>Convert locally</span></a><a href="/">Parquet Viewer<span>Open in browser</span></a></div>
+</div>
+<footer class="site"><div class="in"><div class="cols">
+  <div><h4>ParquetView</h4>Free, privacy-first Parquet tools. Files never leave your browser.<br>© 2026 ParquetView</div>
+  <div><h4>Tools</h4><a href="/">Parquet Viewer</a><br><a href="/parquet-to-csv/">Parquet to CSV</a><br><a href="/parquet-to-json/">Parquet to JSON</a></div>
+  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">On Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">Parquet vs CSV</a></div>
+</div></div></footer>
+<div class="toast" id="toast"></div>
+<script type="module" src="/assets/tool.js"></script>
+</body>
+</html>

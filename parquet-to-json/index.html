@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parquet to JSON — Free Online Converter, No Upload</title>
+<meta name="description" content="Convert Parquet to JSON in your browser for free. No upload, no signup, fully private. Preview rows and export a JSON array instantly.">
+<link rel="canonical" href="https://ggyg5gxksw.page.coze.site/parquet-to-json/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#129702;</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Parquet to JSON \u2014 Free Online Converter, No Upload">
+<meta property="og:description" content="Convert Parquet to JSON in your browser for free. No upload, no signup, fully private. Preview rows and export a JSON array instantly.">
+<meta property="og:url" content="https://ggyg5gxksw.page.coze.site/parquet-to-json/">
+<meta property="og:image" content="https://ggyg5gxksw.page.coze.site/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Parquet to JSON \u2014 Free Online Converter, No Upload">
+<meta name="twitter:description" content="Convert Parquet to JSON in your browser for free. No upload, no signup, fully private. Preview rows and export a JSON array instantly.">
+<meta name="twitter:image" content="https://ggyg5gxksw.page.coze.site/assets/og.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Parquet to JSON Converter", "description": "Convert Parquet to JSON locally and privately", "url": "https://ggyg5gxksw.page.coze.site/parquet-to-json/", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "featureList": ["Open Parquet files locally", "Search and sort", "Export to CSV", "Export to JSON"]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ggyg5gxksw.page.coze.site/"}, {"@type": "ListItem", "position": 2, "name": "Parquet to JSON", "item": "https://ggyg5gxksw.page.coze.site/parquet-to-json/"}]}</script>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <a class="brand" href="/"><span>🪶</span> ParquetView</a>
+  <div class="navlinks"><a href="/">Viewer</a><a href="/parquet-to-csv/">Parquet to CSV</a><a href="/parquet-to-json/" class="active">Parquet to JSON</a><a href="/how-to-open-parquet/">How to open</a><a href="/what-is-parquet/">What is Parquet?</a></div>
+</div></nav>
+<div class="wrap">
+
+  <header class="page">
+    <h1>Parquet to JSON Converter</h1>
+  </header>
+  <p class="sub">Turn <code>.parquet</code> rows into <code>.json</code> on your device. Private by design &mdash; nothing is uploaded.</p>
+  <div class="badges">
+    <span class="badge">&#128274; <b>100% local</b> &middot; no upload</span>
+    <span class="badge">&#128683; <b>No signup</b></span>
+    <span class="badge">&#9889; Snappy &middot; Gzip &middot; Zstd &middot; LZ4</span>
+    <span class="badge">&#128241; Works on mobile</span>
+  </div>
+  <div id="dropzone" class="drop">
+    <div class="big">&#128196;</div>
+    <strong>Drop a .parquet file to convert to JSON</strong>
+    <span>or tap to choose a file &mdash; then hit “JSON”</span>
+    <div class="or"><button class="btn" id="pickbtn" type="button">Choose file</button></div>
+    <span style="display:block;margin-top:10px;font-size:12px">Files stay on your device &mdash; they never leave your browser.</span>
+  </div>
+  <input type="file" id="fileinput" accept=".parquet,.pq,.parq">
+  <section id="workspace" class="hidden">
+    <div class="bar">
+      <div class="search"><span class="ic">&#128269;</span><input id="q" type="search" placeholder="Search all columns&hellip;" autocomplete="off"></div>
+      <button class="btn ghost small" id="resetbtn" type="button">New file</button>
+    </div>
+    <div class="meta">
+      <div class="card"><div class="k">File</div><div class="v" id="m-filename" style="font-size:14px;word-break:break-all">&mdash;</div></div>
+      <div class="card"><div class="k">Total rows</div><div class="v" id="m-rows">&mdash;</div></div>
+      <div class="card"><div class="k">Columns</div><div class="v" id="m-cols">&mdash;</div></div>
+      <div class="card"><div class="k">Row groups</div><div class="v" id="m-groups">&mdash;</div></div>
+      <div class="card"><div class="k">File size</div><div class="v" id="m-size">&mdash;</div></div>
+    </div>
+    <div class="schemawrap" id="schemawrap">
+      <div class="schemahd" id="schemahd"><span class="t">Schema &amp; columns (<span id="schemacount">0</span>)</span><span class="chev">&#9662;</span></div>
+      <div class="schema" id="schema"></div>
+    </div>
+    <div class="bar">
+      <span class="badge" id="matchbadge" style="padding:6px 11px">&mdash; matches</span>
+      <div class="spacer"></div>
+      <button class="btn ghost small" id="csvbtn" type="button">&#11015;&#65039; Export CSV</button>
+      <button class="btn ghost small" id="jsonbtn" type="button">&#11015;&#65039; JSON</button>
+    </div>
+    <div class="tablewrap" id="tablewrap">
+      <table class="data"><thead><tr id="headrow"></tr></thead><tbody id="body"></tbody></table>
+    </div>
+    <div class="pager">
+      <button class="btn ghost small" id="prev" type="button">&lsaquo; Prev</button>
+      <span class="info" id="pageinfo">&mdash;</span>
+      <button class="btn ghost small" id="next" type="button">Next &rsaquo;</button>
+      <button class="btn small" id="loadmore" type="button">Load more rows</button>
+    </div>
+  </section>
+
+<div class="prose">
+<h2>Export Parquet to JSON</h2>
+<ol>
+<li>Drop your <code>.parquet</code> file above.</li>
+<li>Browse or search the rows to confirm the data.</li>
+<li>Click <b>“JSON”</b> to download the rows as a formatted JSON array.</li>
+</ol>
+<p>Dates and timestamps are normalized so the output is ready for APIs, seed scripts and data pipelines.</p>
+</div>
+<div class="related"><a href="/parquet-to-csv/">Parquet to CSV<span>Need a spreadsheet?</span></a><a href="/">Parquet Viewer<span>Inspect first</span></a><a href="/what-is-parquet/">What is Parquet?<span>Learn the format</span></a></div>
+</div>
+<footer class="site"><div class="in"><div class="cols">
+  <div><h4>ParquetView</h4>Free, privacy-first Parquet tools. Files never leave your browser.<br>© 2026 ParquetView</div>
+  <div><h4>Tools</h4><a href="/">Parquet Viewer</a><br><a href="/parquet-to-csv/">Parquet to CSV</a><br><a href="/parquet-to-json/">Parquet to JSON</a></div>
+  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">On Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">Parquet vs CSV</a></div>
+</div></div></footer>
+<div class="toast" id="toast"></div>
+<script type="module" src="/assets/tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How to Open a Parquet File on Windows (No Python, 2026)</title>
+<meta name="description" content="Open .parquet files on Windows 10/11 without Python: use a free browser-based viewer that parses the file locally and privately, then export to CSV for Excel.">
+<link rel="canonical" href="https://ggyg5gxksw.page.coze.site/open-parquet-windows/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#129702;</text></svg>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How to Open a Parquet File on Windows (No Python, 2026)">
+<meta property="og:description" content="Open .parquet files on Windows 10/11 without Python: use a free browser-based viewer that parses the file locally and privately, then export to CSV for Excel.">
+<meta property="og:url" content="https://ggyg5gxksw.page.coze.site/open-parquet-windows/">
+<meta property="og:image" content="https://ggyg5gxksw.page.coze.site/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Open a Parquet File on Windows (No Python, 2026)">
+<meta name="twitter:description" content="Open .parquet files on Windows 10/11 without Python: use a free browser-based viewer that parses the file locally and privately, then export to CSV for Excel.">
+<meta name="twitter:image" content="https://ggyg5gxksw.page.coze.site/assets/og.png">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "How to open a Parquet file on Windows", "description": "How to open Parquet on Windows without Python", "url": "https://ggyg5gxksw.page.coze.site/open-parquet-windows/", "author": {"@type": "Organization", "name": "ParquetView"}, "publisher": {"@type": "Organization", "name": "ParquetView"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ggyg5gxksw.page.coze.site/"}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://ggyg5gxksw.page.coze.site/how-to-open-parquet/"}, {"@type": "ListItem", "position": 3, "name": "Windows", "item": "https://ggyg5gxksw.page.coze.site/open-parquet-windows/"}]}</script>
+</head>
+<body>
+<nav class="nav"><div class="in">
+  <a class="brand" href="/"><span>🪶</span> ParquetView</a>
+  <div class="navlinks"><a href="/">Viewer</a><a href="/parquet-to-csv/">Parquet to CSV</a><a href="/parquet-to-json/">Parquet to JSON</a><a href="/how-to-open-parquet/">How to open</a><a href="/what-is-parquet/">What is Parquet?</a></div>
+</div></nav>
+<div class="wrap">
+
+<header class="page"><h1>How to open a Parquet file on Windows</h1></header>
+<p class="sub">No Python, no command line &mdash; open <code>.parquet</code> on Windows 10/11 in seconds.</p>
+<div class="prose">
+<p>Windows cannot open <code>.parquet</code> files by itself: double-clicking one won't work in File Explorer, and Excel for Windows has no built-in Parquet importer. You have three practical options.</p>
+
+<h2>Option 1 &mdash; Browser viewer (nothing to install)</h2>
+<ol>
+<li>Open the <a href="/">ParquetView viewer</a> in Edge or Chrome.</li>
+<li>Drag the <code>.parquet</code> file from File Explorer onto the page (or click <b>Choose file</b>).</li>
+<li>Search and sort the rows, then export to CSV to open in Excel.</li>
+</ol>
+<p>The file is parsed locally on your PC and is <b>never uploaded</b>, which matters for work data you are not allowed to send online.</p>
+
+<h2>Option 2 &mdash; Convert locally with Python</h2>
+<pre><code>pip install pandas pyarrow
+python -c "import pandas as pd; pd.read_parquet('data.parquet').to_csv('data.csv', index=False)"</code></pre>
+<p>This requires installing Python and libraries &mdash; overkill if you only want a quick look.</p>
+
+<h2>Option 3 &mdash; Power BI Desktop</h2>
+<p>If you already use <b>Power BI Desktop</b>, choose <i>Get Data &rarr; More&hellip; &rarr; Parquet</i> and select the file. It is powerful for reporting but a heavy install just to inspect one file.</p>
+
+<table class="cmp">
+<tr><th>Windows method</th><th>Install?</th><th>Best for</th></tr>
+<tr><td>Browser viewer</td><td>No</td><td>Quick, private look</td></tr>
+<tr><td>Python</td><td>Yes</td><td>Repeated conversions</td></tr>
+<tr><td>Power BI</td><td>Yes</td><td>Dashboards &amp; reporting</td></tr>
+</table>
+
+<div class="cta"><h3>Open Parquet on Windows now</h3>
+<p>Free &middot; no install &middot; the file stays on your computer.</p>
+<div class="row"><a class="btn" href="/">Open the viewer</a></div></div>
+</div>
+<div class="related"><a href="/open-parquet-mac/">On a Mac?<span>Open Parquet on macOS</span></a><a href="/open-parquet-excel/">Need it in Excel?<span>Convert to CSV first</span></a><a href="/how-to-open-parquet/">All methods<span>Compare every option</span></a></div>
+</div>
+<footer class="site"><div class="in"><div class="cols">
+  <div><h4>ParquetView</h4>Free, privacy-first Parquet tools. Files never leave your browser.<br>© 2026 ParquetView</div>
+  <div><h4>Tools</h4><a href="/">Parquet Viewer</a><br><a href="/parquet-to-csv/">Parquet to CSV</a><br><a href="/parquet-to-json/">Parquet to JSON</a></div>
+  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">On Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">Parquet vs CSV</a></div>
+</div></div></footer>
+<div class="toast" id="toast"></div>
+<script type="module" src="/assets/tool.js"></script>
+</body>
+</html>
