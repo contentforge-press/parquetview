@@ -30,7 +30,7 @@ def nav_html(active):
 FOOTER = f"""<footer class="site"><div class="in"><div class="cols">
   <div><h4>ParquetView</h4>Free, privacy-first Parquet tools. Files never leave your browser.<br>© 2026 ParquetView</div>
   <div><h4>Tools</h4><a href="/">Parquet Viewer</a><br><a href="/parquet-to-csv/">Parquet to CSV</a><br><a href="/parquet-to-json/">Parquet to JSON</a></div>
-  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">On Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">Parquet vs CSV</a></div>
+  <div><h4>Guides</h4><a href="/what-is-parquet/">What is a Parquet file?</a><br><a href="/how-to-open-parquet/">How to open Parquet</a><br><a href="/open-parquet-windows/">On Windows</a> &middot; <a href="/open-parquet-mac/">Mac</a> &middot; <a href="/open-parquet-linux/">Linux</a> &middot; <a href="/open-parquet-excel/">Excel</a><br><a href="/parquet-vs-csv/">Parquet vs CSV</a> &middot; <a href="/parquet-vs-json/">JSON</a> &middot; <a href="/parquet-vs-orc/">ORC</a><br><a href="/parquet-viewer-online/">Parquet viewer online</a> &middot; <a href="/parquet-to-jsonl/">Parquet to JSONL</a></div>
 </div></div></footer>"""
 
 TOOL_MARKUP = """
@@ -535,6 +535,362 @@ PAGES["parquet-vs-csv/index.html"] = page(
     "/parquet-vs-csv/", vs_body, None,
     extra_head=article_ld("Parquet vs CSV","A practical comparison of Parquet and CSV","/parquet-vs-csv/","Parquet vs CSV: which should you use?")
     + breadcrumb_ld([("Home","/"),("Guides","/what-is-parquet/"),("Parquet vs CSV","/parquet-vs-csv/")])
+)
+
+# 10) Open Parquet on Linux
+linux_body = """
+<header class="page"><h1>How to open a Parquet file on Linux</h1></header>
+<p class="sub">From the terminal, with Python, or in the browser &mdash; no desktop app required.</p>
+<div class="prose">
+<p>Linux has no default handler for <code>.parquet</code>. Depending on what you have installed, choose one of these.</p>
+
+<h2>Option 1 &mdash; In the browser (nothing to install)</h2>
+<ol>
+<li>Open <a href="/">ParquetView</a> in Firefox or Chrome.</li>
+<li>Drop the <code>.parquet</code> file onto the page.</li>
+<li>Search, sort and export to CSV or JSON.</li>
+</ol>
+<p>The file is parsed locally and never uploaded &mdash; handy on shared servers where you cannot install packages.</p>
+
+<h2>Option 2 &mdash; Python</h2>
+<pre><code>pip install pandas pyarrow
+python -c "import pandas as pd; print(pd.read_parquet('data.parquet').head())"</code></pre>
+
+<h2>Option 3 &mdash; DuckDB CLI</h2>
+<pre><code># Debian/Ubuntu
+sudo apt install duckdb
+duckdb -c "SELECT * FROM read_parquet('data.parquet') LIMIT 20;"</code></pre>
+
+<h2>Option 4 &mdash; Inspect metadata only</h2>
+<pre><code>python - <<'PY'
+import pyarrow.parquet as pq
+f = pq.ParquetFile('data.parquet')
+print(f.metadata)
+print(f.schema)
+PY</code></pre>
+
+<table class="cmp">
+<tr><th>Linux method</th><th>Install?</th><th>Best for</th></tr>
+<tr><td>Browser viewer</td><td>No</td><td>Quick, private inspection</td></tr>
+<tr><td>pandas / pyarrow</td><td>Yes</td><td>Analysis and conversion</td></tr>
+<tr><td>DuckDB</td><td>Yes</td><td>SQL on large files</td></tr>
+</table>
+
+<div class="cta"><h3>Open it without installing anything</h3>
+<div class="row"><a class="btn" href="/">Open the viewer</a></div></div>
+</div>
+""" + related_block([
+    ("/open-parquet-windows/", "On Windows?", "Open Parquet on Windows"),
+    ("/open-parquet-mac/", "On a Mac?", "Open Parquet on macOS"),
+    ("/how-to-open-parquet/", "All methods", "Compare every option"),
+])
+PAGES["open-parquet-linux/index.html"] = page(
+    "How to Open a Parquet File on Linux (Terminal & Browser, 2026)",
+    "Open .parquet files on Linux: in the browser with no install, or via pandas/pyarrow, DuckDB CLI and metadata inspection. Step by step.",
+    "/open-parquet-linux/", linux_body, None,
+    extra_head=article_ld("Open a Parquet file on Linux","How to open Parquet on Linux from the terminal or browser","/open-parquet-linux/","How to open a Parquet file on Linux")
+    + breadcrumb_ld([("Home","/"),("Guides","/how-to-open-parquet/"),("Linux","/open-parquet-linux/")])
+)
+
+# 11) Parquet viewer online (tool page, intent = "parquet viewer online")
+online_body = TOOL_MARKUP.format(
+    h1='Parquet Viewer Online',
+    sub='View <code>.parquet</code> files online &mdash; entirely in your browser. No upload, no signup, no plugin.',
+    drop_strong='Drop your .parquet file to view it online',
+    drop_span='or tap to choose a file &mdash; it stays on your device',
+) + """
+<div class="prose">
+<h2>A private online Parquet viewer</h2>
+<p>Most online viewers upload your file to a server to convert it. ParquetView does the opposite: the Parquet engine (hyparquet) runs inside your browser tab, so your data never leaves your device. There is nothing to install and no account to create.</p>
+<ul>
+<li><b>Preview</b> rows in a clean table, on desktop or mobile.</li>
+<li><b>Search and sort</b> across columns.</li>
+<li><b>See the schema</b>, row groups and file metadata.</li>
+<li><b>Export</b> to CSV or JSON with one click.</li>
+</ul>
+<blockquote>Snappy, Gzip, Zstd and LZ4 compression are supported via WebAssembly.</blockquote>
+</div>
+""" + related_block([
+    ("/", "Parquet Viewer", "Main viewer"),
+    ("/parquet-to-csv/", "Parquet to CSV", "Export a spreadsheet"),
+    ("/parquet-to-json/", "Parquet to JSON", "Export JSON"),
+])
+PAGES["parquet-viewer-online/index.html"] = page(
+    "Parquet Viewer Online — Free, No Upload, No Signup",
+    "View Parquet files online for free. Files are parsed in your browser and never uploaded — no signup, no plugin. Search, sort and export to CSV/JSON.",
+    "/parquet-viewer-online/", online_body, "/",
+    extra_head=ld_json("WebApplication","Parquet Viewer Online","View Parquet files online in your browser, privately","/parquet-viewer-online/")
+    + breadcrumb_ld([("Home","/"),("Parquet Viewer Online","/parquet-viewer-online/")])
+)
+
+# 12) Parquet to JSONL / NDJSON
+jsonl_body = TOOL_MARKUP.format(
+    h1='Parquet to JSONL / NDJSON Converter',
+    sub='Turn <code>.parquet</code> rows into newline-delimited JSON on your device. No upload, no signup.',
+    drop_strong='Drop a .parquet file to convert to JSONL',
+    drop_span='or tap to choose a file &mdash; then hit “JSON”',
+) + """
+<div class="prose">
+<h2>What is JSONL / NDJSON?</h2>
+<p><b>JSON Lines</b> (also called NDJSON) stores one JSON object per line. It is the standard format for streaming logs, BigQuery/Databricks exports and bulk APIs, because each line can be read independently without parsing one giant JSON array.</p>
+
+<h2>How to convert Parquet to JSONL</h2>
+<ol>
+<li>Drop your <code>.parquet</code> file above.</li>
+<li>Preview the rows and confirm the columns.</li>
+<li>Click <b>“Export JSONL”</b>. You get a <code>.jsonl</code> file with one JSON object per line, containing all rows.</li>
+</ol>
+<p>The exported keys come straight from the Parquet schema, so column names and types line up with your data model.</p>
+<blockquote>Common flows: Parquet &rarr; JSONL for log shippers, event streams and Elasticsearch/OpenSearch bulk indexing.</blockquote>
+</div>
+""" + related_block([
+    ("/parquet-to-json/", "Parquet to JSON", "Need a JSON array?"),
+    ("/parquet-to-csv/", "Parquet to CSV", "Need a spreadsheet?"),
+    ("/", "Parquet Viewer", "Inspect the file"),
+])
+PAGES["parquet-to-jsonl/index.html"] = page(
+    "Parquet to JSONL / NDJSON — Free Online Converter",
+    "Convert Parquet to JSONL (NDJSON) in your browser for free. No upload, no signup. Preview rows and export newline-delimited JSON for logs and APIs.",
+    "/parquet-to-jsonl/", jsonl_body, "/parquet-to-json/",
+    extra_head=ld_json("WebApplication","Parquet to JSONL Converter","Convert Parquet to newline-delimited JSON locally","/parquet-to-jsonl/")
+    + breadcrumb_ld([("Home","/"),("Parquet to JSON","/parquet-to-json/"),("Parquet to JSONL","/parquet-to-jsonl/")])
+)
+
+# 13) Parquet vs JSON
+pjson_body = """
+<header class="page"><h1>Parquet vs JSON: which should you use?</h1></header>
+<p class="sub">Comparing size, speed, schema and tooling for storing tabular data.</p>
+<div class="prose">
+<p>JSON is flexible and human-readable; Parquet is compact and built for columnar analytics. Many pipelines use both &mdash; JSON at the edges, Parquet in the warehouse.</p>
+
+<table class="cmp">
+<tr><th></th><th>JSON / JSONL</th><th>Parquet</th></tr>
+<tr><td>Layout</td><td>Documents, row-oriented</td><td>Column-oriented binary</td></tr>
+<tr><td>File size</td><td>Larger; keys repeat every row</td><td>Much smaller (encoding + compression)</td></tr>
+<tr><td>Schema</td><td>Optional / flexible, can drift</td><td>Strong, stored in the file</td></tr>
+<tr><td>Analytics speed</td><td>Slower; parse whole records</td><td>Fast; reads only needed columns</td></tr>
+<tr><td>Human readable</td><td>Yes</td><td>No (needs a viewer)</td></tr>
+<tr><td>Nested data</td><td>Excellent</td><td>Supported, less ad-hoc</td></tr>
+<tr><td>Best for</td><td>APIs, logs, configs, interchange</td><td>Data lakes, analytics, AI, big files</td></tr>
+</table>
+
+<h2>When to choose JSON</h2>
+<ul>
+<li>You talk to a web API or store event logs (JSONL/NDJSON).</li>
+<li>Records have different or changing shapes.</li>
+<li>You need developers to read and edit the raw file.</li>
+</ul>
+
+<h2>When to choose Parquet</h2>
+<ul>
+<li>You query columns over many rows in Spark, DuckDB, pandas or Polars.</li>
+<li>Storage cost and query speed matter.</li>
+<li>You want a reliable schema enforced on write.</li>
+</ul>
+
+<h2>Move between them</h2>
+<p>Convert <a href="/parquet-to-json/">Parquet to JSON</a>, <a href="/parquet-to-jsonl/">JSONL</a> or <a href="/parquet-to-csv/">CSV</a> privately in your browser &mdash; nothing is uploaded.</p>
+
+<div class="cta"><h3>Convert a file now</h3>
+<div class="row"><a class="btn" href="/parquet-to-json/">Parquet &rarr; JSON</a><a class="btn ghost" href="/">Open the viewer</a></div></div>
+</div>
+""" + related_block([
+    ("/parquet-vs-csv/", "Parquet vs CSV", "Other comparison"),
+    ("/what-is-parquet/", "What is Parquet?", "Understand the format"),
+    ("/parquet-to-json/", "Parquet to JSON", "Convert locally"),
+])
+PAGES["parquet-vs-json/index.html"] = page(
+    "Parquet vs JSON: Size, Speed and When to Use Each (2026)",
+    "Parquet vs JSON compared by file size, speed, schema and use cases. JSON is flexible for APIs and logs; Parquet is smaller and faster for analytics.",
+    "/parquet-vs-json/", pjson_body, None,
+    extra_head=article_ld("Parquet vs JSON","A practical comparison of Parquet and JSON","/parquet-vs-json/","Parquet vs JSON: which should you use?")
+    + breadcrumb_ld([("Home","/"),("Guides","/what-is-parquet/"),("Parquet vs JSON","/parquet-vs-json/")])
+)
+
+# 14) Parquet vs ORC
+orc_body = """
+<header class="page"><h1>Parquet vs ORC: which columnar format?</h1></header>
+<p class="sub">Both compress data well &mdash; the choice usually follows your query engine.</p>
+<div class="prose">
+<p><b>Parquet</b> and <b>ORC</b> are both open, columnar, compressed formats for big-data analytics. They have similar performance for many jobs; the bigger factor is the ecosystem around them.</p>
+
+<table class="cmp">
+<tr><th></th><th>Parquet</th><th>ORC</th></tr>
+<tr><td>Origin</td><td>Apache, from the Hadoop/Spark world</td><td>Apache, from the Hive world</td></tr>
+<tr><td>Layout</td><td>Column chunks + row groups</td><td>Stripe-based, with a built-in index</td></tr>
+<tr><td>Compression</td><td>Snappy, Gzip, Zstd, LZ4</td><td>Snappy, Zlib, ZSTD, LZ4</td></tr>
+<tr><td>Strongest in</td><td>Spark, Trino, Impala, AWS, broad cloud support</td><td>Hive, and highly optimized Hive/ACID reads</td></tr>
+<tr><td>Nested data</td><td>Excellent (very widely used)</td><td>Supported</td></tr>
+<tr><td>Adoption 2026</td><td>Broadest default across data lakes</td><td>Common in Hive-centric stacks</td></tr>
+</table>
+
+<h2>Rule of thumb</h2>
+<ul>
+<li>Use <b>Parquet</b> as the default unless your platform is built around Hive and already standardizes on ORC. It has the widest tooling, from Spark and DuckDB to cloud data catalogs.</li>
+<li>Use <b>ORC</b> when you are deep in a Hive ecosystem, especially with transactional Hive tables that benefit from its stripe indexes.</li>
+</ul>
+
+<h2>Opening either format</h2>
+<p>ORC and Parquet are binary, so neither opens by double-clicking. You can open Parquet in the browser with the <a href="/">ParquetView viewer</a> and export to CSV or JSON, with no upload.</p>
+
+<div class="cta"><h3>Open a Parquet file now</h3>
+<div class="row"><a class="btn" href="/">Open the viewer</a></div></div>
+</div>
+""" + related_block([
+    ("/parquet-vs-csv/", "Parquet vs CSV", "Other comparison"),
+    ("/parquet-vs-json/", "Parquet vs JSON", "Other comparison"),
+    ("/what-is-parquet/", "What is Parquet?", "Understand the format"),
+])
+PAGES["parquet-vs-orc/index.html"] = page(
+    "Parquet vs ORC: Columnar Formats Compared (2026)",
+    "Parquet vs ORC compared: both are compressed columnar formats. Parquet is the broad default for Spark/cloud; ORC shines in Hive-centric stacks.",
+    "/parquet-vs-orc/", orc_body, None,
+    extra_head=article_ld("Parquet vs ORC","A practical comparison of Parquet and ORC columnar formats","/parquet-vs-orc/","Parquet vs ORC: which columnar format?")
+    + breadcrumb_ld([("Home","/"),("Guides","/what-is-parquet/"),("Parquet vs ORC","/parquet-vs-orc/")])
+)
+
+# 15) Parquet to Excel
+excel_body = TOOL_MARKUP.format(
+    h1='Parquet to Excel Converter',
+    sub='Open <code>.parquet</code> data in Excel &mdash; export to CSV that opens cleanly in a spreadsheet. No upload, no signup.',
+    drop_strong='Drop a .parquet file to open in Excel',
+    drop_span='or tap to choose a file &mdash; then hit “Export CSV”',
+) + """
+<div class="prose">
+<h2>How to open Parquet in Excel</h2>
+<p>Excel has no native <code>.parquet</code> importer (its Power Query Parquet support is limited and Windows-only). The reliable cross-platform path is to export to CSV, which every version of Excel opens:</p>
+<ol>
+<li>Drop your <code>.parquet</code> file above.</li>
+<li>Preview the rows and confirm the columns look right.</li>
+<li>Click <b>“Export CSV”</b>. The whole file is read before export, so you get every row (not just the first page).</li>
+<li>Open the downloaded CSV in Excel, or use <b>Data &rarr; From Text/CSV</b>.</li>
+</ol>
+<p>The CSV is written with a UTF-8 BOM so non-ASCII text and dates display correctly.</p>
+<blockquote>Excel's row limit is 1,048,576 rows. If your Parquet file is larger, filter or take the subset you need before exporting rather than loading everything into one sheet.</blockquote>
+<h2>Date and number columns</h2>
+<p>Parquet date and timestamp columns are exported as clean <code>YYYY-MM-DD</code> and <code>YYYY-MM-DD HH:MM:SS</code> text, so Excel does not misread them. Re-save as <code>.xlsx</code> from Excel if you need formulas and formatting.</p>
+</div>
+""" + related_block([
+    ("/open-parquet-excel/", "Open Parquet in Excel", "Detailed Excel guide"),
+    ("/parquet-to-csv/", "Parquet to CSV", "Direct CSV export"),
+    ("/", "Parquet Viewer", "Inspect first"),
+])
+PAGES["parquet-to-excel/index.html"] = page(
+    "Parquet to Excel — Open .parquet in Excel Free (2026)",
+    "Convert Parquet to an Excel-friendly CSV for free. Files are parsed in your browser, never uploaded. Export all rows with clean dates and open them in Excel.",
+    "/parquet-to-excel/", excel_body, "/parquet-to-csv/",
+    extra_head=ld_json("WebApplication","Parquet to Excel Converter","Convert Parquet to an Excel-ready CSV locally","/parquet-to-excel/")
+    + breadcrumb_ld([("Home","/"),("Parquet to CSV","/parquet-to-csv/"),("Parquet to Excel","/parquet-to-excel/")])
+)
+
+# 16) Large Parquet file viewer
+large_body = TOOL_MARKUP.format(
+    h1='Large Parquet File Viewer',
+    sub='Inspect big <code>.parquet</code> files without loading them all into memory. Rows are read on demand in your browser.',
+    drop_strong='Drop a large .parquet file to inspect it',
+    drop_span='or tap to choose a file &mdash; the first rows load quickly',
+) + """
+<div class="prose">
+<h2>Why big files are a problem</h2>
+<p>Reading a multi-GB Parquet file into pandas or a text editor can hang your machine or run out of memory. ParquetView avoids this:</p>
+<ul>
+<li>Only the <b>first rows</b> are read initially, so a large file opens almost immediately.</li>
+<li><b>Metadata and schema</b> come from the Parquet footer, which is tiny even for huge files.</li>
+<li>Use <b>“Load more rows”</b> only if you need to page further through the data.</li>
+<li><b>Export</b> reads the rest on demand, up to the in-browser limit.</li>
+</ul>
+<h2>Tips for very large datasets</h2>
+<ul>
+<li><b>Search</b> within the loaded rows to find the records you need before exporting.</li>
+<li>Parquet stores data in <b>row groups</b>; files written with many small groups may be slower than files with a few large ones.</li>
+<li>For files larger than the browser can comfortably hold, work on the subset you need, or use an engine like DuckDB/Spark for full-file aggregation.</li>
+</ul>
+<blockquote>Everything still runs locally: a large file is read from your disk in ranges and is never uploaded anywhere.</blockquote>
+</div>
+""" + related_block([
+    ("/", "Parquet Viewer", "Main viewer"),
+    ("/parquet-viewer-online/", "Parquet Viewer Online", "Online viewer"),
+    ("/parquet-to-csv/", "Parquet to CSV", "Export data"),
+])
+PAGES["large-parquet-file-viewer/index.html"] = page(
+    "Large Parquet File Viewer — Open Big Parquet Without Crashing",
+    "Open large Parquet files without loading everything into memory. Rows load on demand in your browser, privately and free — schema, search and export.",
+    "/large-parquet-file-viewer/", large_body, "/",
+    extra_head=ld_json("WebApplication","Large Parquet File Viewer","Inspect large Parquet files with on-demand row loading","/large-parquet-file-viewer/")
+    + breadcrumb_ld([("Home","/"),("Large Parquet File Viewer","/large-parquet-file-viewer/")])
+)
+
+# 17) Open Parquet on a phone / mobile
+mobile_body = TOOL_MARKUP.format(
+    h1='Open Parquet Files on Your Phone',
+    sub='A mobile-friendly Parquet viewer for iPhone and Android. Pick a file from your device &mdash; it is parsed in the browser, nothing is uploaded.',
+    drop_strong='Tap to choose a .parquet file',
+    drop_span='or open one from Files, iCloud Drive or Google Drive',
+) + """
+<div class="prose">
+<h2>Viewing Parquet on mobile</h2>
+<p>There is no built-in Parquet app on iOS or Android. ParquetView is designed to work in your phone's browser:</p>
+<ol>
+<li>Open this page in <b>Safari</b> (iPhone) or <b>Chrome</b> (Android).</li>
+<li>Tap <b>“Choose file”</b> and pick the <code>.parquet</code> file from Files, iCloud Drive, Google Drive or a download.</li>
+<li>The rows render in a scrollable, searchable table.</li>
+<li>Export to CSV or JSON if you need to move the data elsewhere.</li>
+</ol>
+<h2>Tips</h2>
+<ul>
+<li>Rotate to <b>landscape</b> to see more columns.</li>
+<li>Only the first rows load initially, which keeps large files fast on a phone.</li>
+<li>The file is processed on the device &mdash; useful when you only have your phone and no laptop.</li>
+</ul>
+<blockquote>No app to install, no account, and the file never leaves your phone.</blockquote>
+</div>
+""" + related_block([
+    ("/", "Parquet Viewer", "Full viewer"),
+    ("/parquet-viewer-online/", "Parquet Viewer Online", "Online viewer"),
+    ("/how-to-open-parquet/", "How to open Parquet", "All platforms"),
+])
+PAGES["open-parquet-mobile/index.html"] = page(
+    "Open Parquet Files on Your Phone (iPhone & Android) — Free",
+    "View Parquet files on iPhone or Android for free. Pick a file from Files/iCloud/Google Drive; it is parsed in your mobile browser and never uploaded.",
+    "/open-parquet-mobile/", mobile_body, "/",
+    extra_head=ld_json("WebApplication","Mobile Parquet Viewer","Open Parquet files on a phone in the browser","/open-parquet-mobile/")
+    + breadcrumb_ld([("Home","/"),("Open Parquet on Mobile","/open-parquet-mobile/")])
+)
+
+# 18) Parquet schema viewer
+schema_body = TOOL_MARKUP.format(
+    h1='Parquet Schema Viewer',
+    sub='Inspect the schema, column types, row groups and metadata of any <code>.parquet</code> file. Read locally, no upload.',
+    drop_strong='Drop a .parquet file to see its schema',
+    drop_span='or tap to choose a file &mdash; metadata loads instantly',
+) + """
+<div class="prose">
+<h2>What you can inspect</h2>
+<p>The schema lives in the Parquet footer, so it appears even before the data rows are read:</p>
+<ul>
+<li><b>Columns and logical types</b> &mdash; names plus types such as int64, double, string, boolean, date and timestamp.</li>
+<li><b>Row count and row groups</b> &mdash; <code>num_rows</code> and the number of row groups.</li>
+<li><b>File metadata</b> &mdash; size and key/value metadata written by the producer.</li>
+</ul>
+<h2>Why check the schema?</h2>
+<ul>
+<li>Confirm column names and types <b>before</b> loading a file into a pipeline.</li>
+<li>Diagnose why two "same" files differ (a column read as string vs int, missing fields, etc.).</li>
+<li>Verify how dates, timestamps and nested fields were encoded by the writer.</li>
+</ul>
+<blockquote>Toggle columns in the chip bar to focus on the fields you need, then export to CSV or JSON.</blockquote>
+</div>
+""" + related_block([
+    ("/", "Parquet Viewer", "Browse the rows"),
+    ("/what-is-parquet/", "What is Parquet?", "Understand the format"),
+    ("/large-parquet-file-viewer/", "Large File Viewer", "Big files"),
+])
+PAGES["parquet-schema-viewer/index.html"] = page(
+    "Parquet Schema Viewer — Inspect Column Types and Metadata",
+    "Inspect a Parquet file's schema, column types, row groups and metadata for free. Parsed in your browser and never uploaded.",
+    "/parquet-schema-viewer/", schema_body, "/",
+    extra_head=ld_json("WebApplication","Parquet Schema Viewer","Inspect Parquet schema and metadata locally","/parquet-schema-viewer/")
+    + breadcrumb_ld([("Home","/"),("Parquet Schema Viewer","/parquet-schema-viewer/")])
 )
 
 # ---------------- Write all ----------------
