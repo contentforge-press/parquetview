@@ -139,3 +139,15 @@ footer.site h4{color:var(--txt);font-size:13px;margin:0 0 8px}
 .linkgrid a:hover{border-color:var(--acc);text-decoration:none;transform:translateY(-1px)}
 .linkgrid a b{font-size:14.5px}
 .linkgrid a span{color:var(--mut);font-size:12.5px}
+
+/* FAQ */
+.faqwrap{margin:34px 0 8px}
+.faqwrap>h2{margin-bottom:14px}
+details.faq{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 16px;margin:10px 0}
+details.faq[open]{border-color:var(--acc)}
+details.faq summary{cursor:pointer;padding:14px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.faq summary::-webkit-details-marker{display:none}
+details.faq summary::after{content:"+";color:var(--acc);font-size:18px;line-height:1}
+details.faq[open] summary::after{content:"–"}
+details.faq .faq-a{padding:0 0 14px;color:var(--mut)}
+details.faq .faq-a p{margin:0}
